@@ -10,3 +10,4 @@ it is a text-image generation using stable difussion
 - pip install -r requirements.txt
 ***
 
+"# generative_Ai_app" 
