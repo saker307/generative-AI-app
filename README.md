@@ -13,3 +13,9 @@ it is a text-image generation using stable difussion
 copy .env.example .env
 ***
 uvicorn app:app --reload
+***
+download ngrok from  agrok website
+- then open command prompt
+- write: ngrok http 8000 
+- you will take a url use it while uvicorn app:app --reload run
+-  
