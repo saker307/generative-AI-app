@@ -1,28 +1,40 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import uvicorn
-from typing import Any
+from diffusers import DiffusionPipeline
 from PIL import Image
-import base64
+import torch
 from io import BytesIO
-from model import load_model, generate_image
+import base64
 
 app = FastAPI()
 
-# Load the model at startup
-model = load_model()
+class GenerateRequest(BaseModel):
+    prompt: str
 
-class TextInput(BaseModel):
-    text: str
+def load_model():
+    model = DiffusionPipeline.from_pretrained(
+        "stabilityai/stable-diffusion-xl-base-1.0",
+        torch_dtype=torch.float16,
+        use_safetensors=True,
+        variant="fp16"
+    )
+    if torch.cuda.is_available():
+        model.to("cuda")
+    model.enable_model_cpu_offload()
+    return model
+
+model = load_model()
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the Generative Text-to-Image API"}
+    return {"message": "Welcome from the API"}
 
-@app.post("/generate-image/")
-def generate_image_endpoint(input_data: TextInput):
+@app.post("/generate")
+async def generate(request: GenerateRequest):
+    prompt = request.prompt
     try:
-        image = generate_image(model, input_data.text)
+        result = model(prompt=prompt)
+        image = result.images[0]
         buffered = BytesIO()
         image.save(buffered, format="PNG")
         img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
@@ -31,4 +43,5 @@ def generate_image_endpoint(input_data: TextInput):
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=5000)
