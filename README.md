@@ -6,9 +6,9 @@ it is a text-image generation using stable difussion
 ***
 #### installations
 - cd src
-
-- pip install -r requirements.txt
+pip install -r requirements.txt
+- 
 ***
 
-"# generative_Ai_app" 
-"# generative_Ai_app" 
+- uvicorn main:app --reload
+

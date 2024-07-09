@@ -10,8 +10,8 @@ def load_model():
         use_safetensors=True,
         variant="fp16"
     )
-    #model.to("cpu")
-    model.enable_model_cpu_offload()
+    model.to("cpu")
+    #model.enable_model_cpu_offload()
     return model
 
 def generate_image(model: Any, text: str) -> Image:
