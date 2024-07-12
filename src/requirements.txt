@@ -1,4 +1,4 @@
-
+torch==2.3.1
 diffusers==0.29.2
 transformers==4.42.2
 pillow==10.3.0
@@ -9,6 +9,4 @@ invisible-watermark==0.2.0
 any==0.0.2
 torchaudio==2.3.1
 pytorch-gpu==0.0.1
-cuda-python==12.5.0
-Flask==3.0.3
-torch==2.3.1
+pytorch-cuda==11.7 
